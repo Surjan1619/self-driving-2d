@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 860" width="800" height="860" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5B6573"/>
+    </marker>
+    <clipPath id="worldClip"><circle cx="400" cy="400" r="112"/></clipPath>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1B2430" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="860" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="400" y="38" text-anchor="middle" font-size="26" font-weight="700" fill="#1B2430">The Self-Driving Loop</text>
+  <text x="400" y="62" text-anchor="middle" font-size="14" fill="#6B7480">Sense → Perceive → Plan → Act, repeated many times every second</text>
+
+  <g transform="translate(0,50)">
+    <!-- faint orbit -->
+    <circle cx="400" cy="400" r="260" fill="none" stroke="#E6E9EE" stroke-width="2" stroke-dasharray="4 8"/>
+
+    <!-- Arrows between steps -->
+    <g fill="none" stroke="#5B6573" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)">
+      <path d="M538,180 A260,260 0 0,1 647,320"/>
+      <path d="M647,480 A260,260 0 0,1 538,620"/>
+      <path d="M262,620 A260,260 0 0,1 153,480"/>
+      <path d="M153,320 A260,260 0 0,1 262,180"/>
+    </g>
+
+    <!-- Arrow labels -->
+    <g font-size="13" font-weight="600" fill="#3D4652" text-anchor="middle">
+      <rect x="590" y="196" width="100" height="26" rx="13" fill="#F1F3F6"/>
+      <text x="640" y="214">raw data</text>
+      <rect x="575" y="575" width="130" height="26" rx="13" fill="#F1F3F6"/>
+      <text x="640" y="593">what is around</text>
+      <rect x="110" y="575" width="100" height="26" rx="13" fill="#F1F3F6"/>
+      <text x="160" y="593">decision</text>
+      <rect x="95" y="196" width="130" height="26" rx="13" fill="#F1F3F6"/>
+      <text x="160" y="214">world changes</text>
+    </g>
+
+    <!-- SENSE -->
+    <g filter="url(#shadow)">
+      <rect x="280" y="85" width="240" height="110" rx="16" fill="#EEF4FF" stroke="#2F6FDE" stroke-width="2"/>
+    </g>
+    <circle cx="308" cy="115" r="15" fill="#2F6FDE"/>
+    <text x="308" y="120" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">1</text>
+    <text x="332" y="121" font-size="19" font-weight="700" fill="#1D4FA8">SENSE</text>
+    <text x="400" y="152" text-anchor="middle" font-size="13" fill="#2B3440">Cameras, radar, lidar, GPS, IMU</text>
+    <text x="400" y="176" text-anchor="middle" font-size="13" font-style="italic" fill="#1D4FA8">→ pixels, distances, position</text>
+
+    <!-- PERCEIVE -->
+    <g filter="url(#shadow)">
+      <rect x="540" y="345" width="240" height="110" rx="16" fill="#F4EFFF" stroke="#7A4FD6" stroke-width="2"/>
+    </g>
+    <circle cx="568" cy="375" r="15" fill="#7A4FD6"/>
+    <text x="568" y="380" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">2</text>
+    <text x="592" y="381" font-size="19" font-weight="700" fill="#5A35AE">PERCEIVE</text>
+    <text x="660" y="412" text-anchor="middle" font-size="13" fill="#2B3440">Computer + neural networks</text>
+    <text x="660" y="436" text-anchor="middle" font-size="13" font-style="italic" fill="#5A35AE">→ “car ahead, lane on the left”</text>
+
+    <!-- PLAN -->
+    <g filter="url(#shadow)">
+      <rect x="280" y="605" width="240" height="110" rx="16" fill="#FFF6E8" stroke="#D98A1C" stroke-width="2"/>
+    </g>
+    <circle cx="308" cy="635" r="15" fill="#D98A1C"/>
+    <text x="308" y="640" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">3</text>
+    <text x="332" y="641" font-size="19" font-weight="700" fill="#9A5D07">PLAN</text>
+    <text x="400" y="672" text-anchor="middle" font-size="13" fill="#2B3440">Map, rules, predictions</text>
+    <text x="400" y="696" text-anchor="middle" font-size="13" font-style="italic" fill="#9A5D07">→ “slow down, steer left”</text>
+
+    <!-- ACT -->
+    <g filter="url(#shadow)">
+      <rect x="20" y="345" width="240" height="110" rx="16" fill="#EAF7F0" stroke="#2E9E6A" stroke-width="2"/>
+    </g>
+    <circle cx="48" cy="375" r="15" fill="#2E9E6A"/>
+    <text x="48" y="380" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">4</text>
+    <text x="72" y="381" font-size="19" font-weight="700" fill="#1D7049">ACT</text>
+    <text x="140" y="412" text-anchor="middle" font-size="13" fill="#2B3440">Steering, throttle, brakes</text>
+    <text x="140" y="436" text-anchor="middle" font-size="13" font-style="italic" fill="#1D7049">→ the car moves</text>
+
+    <!-- CENTER: car and world -->
+    <circle cx="400" cy="400" r="116" fill="#FFFFFF" stroke="#D5DAE1" stroke-width="2"/>
+    <g clip-path="url(#worldClip)">
+      <rect x="280" y="280" width="240" height="240" fill="#E9F3E4"/>
+      <rect x="280" y="382" width="240" height="56" fill="#5F6670"/>
+      <line x1="280" y1="410" x2="520" y2="410" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="14 10"/>
+      <!-- trees -->
+      <circle cx="335" cy="345" r="16" fill="#5FAF5A"/>
+      <circle cx="358" cy="335" r="11" fill="#78C273"/>
+      <circle cx="465" cy="470" r="15" fill="#5FAF5A"/>
+      <circle cx="440" cy="480" r="10" fill="#78C273"/>
+      <!-- pedestrian -->
+      <circle cx="470" cy="352" r="5" fill="#3D4652"/>
+      <rect x="466" y="359" width="8" height="16" rx="3" fill="#3D4652"/>
+      <!-- car (top view, driving right) -->
+      <rect x="372" y="388" width="52" height="26" rx="8" fill="#DC3C32"/>
+      <rect x="402" y="392" width="12" height="18" rx="3" fill="#F7D7D4"/>
+      <rect x="380" y="392" width="9" height="18" rx="3" fill="#B52E26"/>
+      <!-- sensor waves in front of the car -->
+      <path d="M430,393 Q440,401 430,409" fill="none" stroke="#2F6FDE" stroke-width="2"/>
+      <path d="M437,388 Q452,401 437,414" fill="none" stroke="#2F6FDE" stroke-width="2" opacity="0.6"/>
+    </g>
+    <text x="400" y="318" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="2" fill="#4A5361">THE WORLD</text>
+    <text x="400" y="506" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="2" fill="#4A5361">+ THE CAR</text>
+  </g>
+</svg>
