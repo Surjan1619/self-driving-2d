@@ -39,3 +39,23 @@ Lidar builds a 3D map of the world (a *point cloud*) using laser light. It shows
 
 How it works: a laser sends out short pulses of light. The light reflects off surrounding objects, and part of it returns to the sensor. A detector measures the time between sending the pulse and receiving it back. Since light travels at a known speed, the distance is: **distance = (speed of light × time) / 2** (divided by 2 because the light travels there and back). The lidar measures millions of points every second, and together they form a detailed 3D map of the surroundings.
 
+### Sensor table
+
+| Sensor | What it measures | How it works (one sentence) | Typical range | Strong at | Fooled or blinded by | Rough price |
+|---|---|---|---|---|---|---|
+| **Camera** | Light: colour and brightness → images of the world | Photons hit the camera sensor (matrix), which records the colour and brightness of each pixel; many pictures per second (FPS) make a video. | Up to ~250 m (depends on the lens and camera quality) | Recognising things by look: traffic lights, signs, lane lines, people. With a powerful computer-vision system it can recognise almost everything it sees. | Rain, snow, fog, darkness, glare from the sun, a dirty lens: anything that stops light from reaching the sensor | Cheap |
+| **Radar** | Distance and speed of objects | The car sends radio waves (~77 GHz, older ones 24 GHz) and the antenna receives the reflection; FMCW radar compares the frequency of sent and received waves to get distance and speed. | Up to ~250 m (car radars) | Working where cameras fail: rain, fog, darkness; measures speed directly | Interference from other radars; metal objects (bridges, manhole covers) can create false "ghost" objects; low resolution, so it cannot see shape well | Cheap–medium (~$50–200 for a car radar) |
+| **Lidar** | Distance to millions of points → a 3D point cloud | Sends many laser pulses and measures the time until each one reflects from a surface and comes back. | ~200–300 m | Building a very accurate 3D map of the world, day and night | Heavy rain, fog, snow and dust scatter the laser; black or mirror-like surfaces reflect badly. (Mechanical lidars can also wear out and are sensitive to vibration.) | Expensive (hundreds to thousands of $) |
+| **Ultrasonic** | Distance to nearby objects | Sends ultrasound pulses and computes the distance from the time the echo takes to come back. | ~0.2–5 m | Short distances (parking), simple and cheap design | Soft materials that absorb sound (snow, fabric), thin poles, dirt or ice on the sensor. It only gives distance: it cannot recognise objects or build a 3D map. | Cheap |
+| **GPS / GNSS** | The car's position on Earth (and exact time) | Satellites with atomic clocks send radio signals with the time; the receiver measures how long each signal took from at least 4 satellites and calculates its position. More satellites = better accuracy. | Works anywhere on Earth with an open sky; accuracy ~3–5 m (a few cm with RTK correction) | Knowing where the car is on the map, anywhere in the world | Tunnels, tall buildings and anything that blocks or reflects the radio signals; jamming | Cheap (precise RTK receivers are expensive) |
+| **IMU (accelerometer + gyroscope)** | The car's own acceleration and rotation | Tiny (micro) sensors have small movable parts; when the IMU moves, these parts move by inertia and the sensors detect it. | No "range": it measures the car's own motion in all 3 axes, hundreds of times per second | Measuring movement and rotation very fast; works everywhere, even in tunnels where GPS fails | Drift: small errors (bias) add up, so on its own it stays accurate only for a short time (seconds to minutes) | Cheap (high-precision ones are expensive) |
+
+### Sensors on a real car: Waymo
+
+![Waymo self-driving car with its sensors labelled](diagrams/waymo-sensors-labelled.webp)
+
+*Source: Waymo, "Our Vehicle Sensors" (Waymo Safety Report, waymo.com/safety)*
+
+<!-- TODO: for each sensor write where it is mounted and WHY it sits there. -->
+
+
