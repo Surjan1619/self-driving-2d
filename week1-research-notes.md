@@ -126,3 +126,85 @@ At Level 3 the car drives itself, so the person is allowed to stop watching the 
 
 
 
+---
+
+## Step 5 · Failure analysis: Tesla Autopilot, Williston, Florida, May 2016
+
+Source: NTSB, *Highway Accident Report HAR-17/02* (2017), [docs/HAR1702.pdf](docs/HAR1702.pdf)
+
+### What happened?
+On 7 May 2016 a Tesla Model S was driving east on highway US-27A in Florida. A truck coming from the other direction made a left turn across the Tesla's lanes, in front of it. The Tesla driver was not watching the road and did not notice the truck's trailer.
+- **Seconds before:** the driver's last action was 1 min 51 s before the crash, when he raised the cruise speed to 74 mph. After that he did not steer or brake at all (section 1.3.5, p. 15).
+- **The moment:** the car hit the side of the trailer at 74 mph (≈119 km/h); the speed limit was 65 mph (≈105 km/h). It drove under the trailer, and the trailer sheared off the car's roof (1.1.1, p. 1).
+- **What happened next:** the car left the road, went through two fences, broke a utility pole and stopped about 910 feet (≈277 m) later. The Tesla driver was killed; the truck driver was not hurt (1.1.1, p. 1).
+
+Tesla saves logs on an SD card in the car's computer and sometimes sends this data to the company. These logs are how investigators know what the car was doing (1.3.5, p. 14). The logs show that two Autopilot systems were on:
+- **Traffic-Aware Cruise Control (TACC)** controls the speed. It keeps the speed the driver set and slows down, even to a full stop, if there is a car in front; then it speeds up again.
+- **Autosteer** steers the car to keep it in its lane by following the lane markings.
+
+Together these two systems make SAE Level 2 (1.3.3, p. 9). At Level 2 the driver must not stop watching the road, but the Tesla driver did. During the 41-minute trip Autopilot was on for 37 minutes, and the system felt the driver's hands on the steering wheel for only 25 seconds. It warned him 7 times to hold the wheel, and the longest time he drove without his hands on the wheel was almost 6 minutes (1.3.5, p. 14).
+
+### Which step of the loop failed?
+**Perceive.** The camera and radar were working, but the system never understood that a truck was crossing its path, so Plan and Act never reacted: no warning, no braking, no slowing down.
+> "There was no record indicating that the Tesla's automation system identified the truck that was crossing in the car's path or that it recognized the impending crash." (1.3.5, p. 15)
+
+Autopilot was not designed to recognise vehicles crossing the road (finding 3, p. 41). In 2016 no car company's emergency braking was designed for crossing traffic (2.2.4, p. 30). The human's own loop also failed: the driver was not looking, so he never sensed the truck.
+
+### What did the humans and the company get wrong?
+- **The truck driver** had to yield the right of way and did not (2.2.2, p. 30).
+- **The Tesla driver.** At Level 2 the driver must (2.5, p. 34):
+  - monitor the automation;
+  - understand what is happening on the road;
+  - know the system's limits;
+  - be ready to take control at any moment.
+
+  He did none of this: he trusted the automation too much (findings 7–8, p. 41).
+- **Tesla:**
+  - Autopilot could be switched on on roads it was not designed for. The manual said "highways and limited-access roads only", but the car did not block other roads (2.4, p. 33).
+  - Many cars check that the driver's hands are on the wheel by measuring the turning force (torque) on it. But driving is mainly about the eyes: a driver can hold the wheel without looking at the road (finding 6, p. 41). Some newer systems, such as Cadillac Super Cruise, use a camera to track the driver's head or eyes (2.5, p. 35).
+
+NTSB's probable cause: the truck driver did not yield, and the Tesla driver was inattentive because he relied too much on the automation and did not react. Autopilot's design made this worse, because it let him stop paying attention for a long time and use it in ways Tesla's own manual warned against (3.2, p. 42).
+
+### What changed afterwards?
+On 23 September 2016 Tesla sent firmware version 8 to all its cars. It changed the driver interface and the warning logic (1.3.6, p. 16):
+- The driver can now keep his hands off the wheel for less time before the car warns him.
+- After 3 warnings, Autosteer switches off and cannot be used for one hour or until the car is restarted.
+- On preferred roads there are no warnings below 8 mph. The first warning comes after 10 minutes at 8–45 mph, and after 2–3 minutes above 45 mph.
+
+But even after this update Autopilot can still be used on any road with clear lane markings (2.4, p. 33). The NTSB asked car makers to allow automation only where it was designed to work (H-17-41) and to find better ways to check that the driver is paying attention (H-17-42) (4.1, p. 43).
+
+### My recommendation
+A camera on the steering column tracks the driver's eyes instead of checking for hands on the wheel, because a driver can hold the wheel without looking at the road (finding 6, p. 41).
+1. If the driver's eyes are off the road for more than 15 seconds, the car sounds an alarm.
+2. After 3 alarms in a row with no response, the car slows down, moves to the right side of the road and stops with the hazard lights on. Today's systems stop in the travel lane; NTSB expects future systems to leave the lane before stopping (2.5, footnote 63, p. 34).
+3. If the driver still does not respond after the car has stopped, for example because he is asleep or feels ill, the car calls 911.
+
+This fixes the **Sense and Perceive** steps of the loop *for the driver*: the car can finally tell whether the human is watching the road. The final stop is the **Act** step.
+
+**How to test it:** a test driver looks away from the road on a closed test track. The alarm must sound within 5 seconds, and after 3 ignored alarms the car must stop on the right side of the road.
+
+### Link to my project
+My Week 2 car can make the same kind of mistake. Its sensors only report "on the dark line" or "not on the line". If all of them see nothing, `brain()` returns 0, so the car drives straight ahead and leaves the track without "knowing" that anything is wrong. Like the Tesla, it treats "I see nothing" as "nothing is there".
+
+"Sees nothing" can mean two things: the car has drifted off the line, or the sensors are broken or blocked. The car cannot tell which, so it should do this:
+1. Slow down and keep steering towards the side where it last saw the line.
+2. If the line appears again within 1 second (60 frames), it carries on driving normally.
+3. If the line does not appear, it stops, because it must assume its sensors are broken or blocked.
+
+This fixes the **Plan** step: the car decides that "no data" means danger. I will build this in Step 10, challenge B.
+
+---
+
+## Step 6 · Reading the starter code
+
+**1. Which functions do SENSE, THINK and ACT?**
+SENSE is `read_sensors(car, track)`, and ACT is `car.move(steer)` (main.py, lines 112–114). The THINK line uses two functions: if autopilot is on, `brain(readings)` decides how to steer from the sensor readings; if it is off, `keyboard_steer()` reads the arrow keys and the human drives.
+
+**2. How many times per second does the loop run?**
+60 times. `FPS = 60` (line 15), and `clock.tick(FPS)` (line 128) waits at the end of every loop so it never runs faster than 60 frames per second.
+
+**3. What does `on_line()` check?**
+It checks whether a point is inside the window and whether the pixel of the track under it is dark. It adds up the red, green and blue values: the line `(40, 40, 40)` gives 120 and the floor `(235, 235, 225)` gives 695. Anything below 300 counts as "on the line".
+
+**4. Why is the track drawn on its own surface `track`?**
+The sensors read colours from `track`, which only has the floor and the line. If they read from `screen`, they would also see the red car and the blue sensor dots drawn on top. For example, a sensor under the car would read red, and red is not dark, so it would wrongly say "not on the line".
