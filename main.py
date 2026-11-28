@@ -17,6 +17,12 @@ FPS = 60                      # loop runs 60 times per second
 TURN_RATE = 4.0               # degrees the car turns per frame at full steer
 START = (450, 115, 0)         # x, y, heading (degrees, 0 = pointing right)
 
+# Step 8: sensors.
+# Each sensor is a point in front of the car. Its angle is measured FROM the car's heading:
+#   -30 = 30 degrees to the LEFT of where the car points, +30 = 30 degrees to the RIGHT.
+SENSOR_ANGLES = [-30, 30]     # degrees from the heading: negative = left, positive = right
+SENSOR_DISTANCE = 25          # pixels ahead of the car's centre
+
 
 class Car:
     def __init__(self, x, y, heading):
@@ -81,15 +87,35 @@ def make_track():
 
 # ---------------- SENSE ----------------
 def sensor_points(car):
-    """Return a list of (x, y) points just ahead of the car."""
-    # TODO Step 8
-    return []
+    """Return a list of (x, y) points just ahead of the car.
+
+    It is the same cos/sin idea as Car.move(): "go N pixels in direction D".
+    The only difference: the direction is the car's heading PLUS the sensor's angle.
+    """
+    points = []
+    for angle in SENSOR_ANGLES:            # angle = -30 (left sensor), then +30 (right sensor)
+        # Direction of this sensor = where the car points + the sensor's own angle.
+        # Example: car heading 0 (right), left sensor -30 -> it looks 30 degrees up-right.
+        rad = math.radians(car.heading + angle)
+        # Start at the car's centre and go SENSOR_DISTANCE pixels in that direction.
+        # cos -> how far in x, sin -> how far in y (exactly like in move()).
+        sx = car.x + math.cos(rad) * SENSOR_DISTANCE
+        sy = car.y + math.sin(rad) * SENSOR_DISTANCE
+        points.append((sx, sy))
+    # With 2 angles we return 2 points: [(left_x, left_y), (right_x, right_y)]
+    return points
 
 
 def read_sensors(car, track):
-    """Return one True/False per sensor point: is it on the dark line?"""
-    # TODO Step 8
-    return []
+    """Return one True/False per sensor point: is it on the dark line?
+
+    This is the SENSE step: for every sensor point, look at the colour of the TRACK
+    under it. True = dark line, False = light floor.
+    Result example: [True, False] = left sensor on the line, right sensor off it.
+    """
+    # List comprehension = a short for-loop that builds a list:
+    # "for every (x, y) from sensor_points, put on_line(track, x, y) into the list".
+    return [on_line(track, x, y) for (x, y) in sensor_points(car)]
 
 
 # ---------------- THINK ----------------
@@ -128,6 +154,7 @@ def main():
     autopilot = False
     frames_off_line = 0
     steer = 0.0
+    last_readings = None          # Step 8: remembers the previous readings (for printing changes)
 
     running = True
     while running:
@@ -157,6 +184,12 @@ def main():
                     car.speed = max(0.0, car.speed - 0.5)
 
         readings = read_sensors(car, track)                     # SENSE
+        # Step 8 observation: print the readings to the terminal, but ONLY when they change.
+        # (Printing every frame would flood the terminal with 60 lines per second.)
+        # Delete these 3 lines when you have filled in the table.
+        if readings != last_readings:
+            print("left, right =", readings)
+            last_readings = readings
         steer = brain(readings) if autopilot else keyboard_steer()   # THINK
         car.move(steer)                                          # ACT
 

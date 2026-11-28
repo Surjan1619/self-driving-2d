@@ -229,3 +229,33 @@ The oval is about 1760 pixels long, so 3 laps take about 2640 frames at speed 2 
 
 **3. Why is −1 / 0 / +1 steering not smooth?**
 Sometimes the car needs to turn just a little and sometimes a lot, but the keyboard only gives "straight" or "full turn". The oval is a long gentle curve that needs a small steer such as +0.3. With the keyboard I have to keep pressing and releasing the key: released, the car drifts off the outside of the line; pressed, it turns too hard to the inside. So it zig-zags instead of following a smooth arc. If my `brain()` in Step 9 only returns −1, 0 or +1, the autopilot will wobble in the same way.
+
+---
+
+## Step 8 · Sensors
+
+Two sensors, 25 pixels ahead of the car, 30° to the left and 30° to the right of its heading. Each one says `True` if it is on the dark line.
+
+| Situation | Left sensor | Right sensor |
+|---|---|---|
+| Car centred on the line, going straight | True | True |
+| Car drifting so the line is to its left | True | False |
+| Car drifting so the line is to its right | False | True |
+| Car completely off the line | False | False |
+
+**Which situations can my car not tell apart?** When the car is completely off the line, both sensors read `False`, whether the car has left the oval on the inside or on the outside. So the car does not know which side the line is on, and it does not know which way to steer back. The two sensors also do not tell the car at what angle it is crossing the line. (Same problem as in Step 5: "I see nothing" does not say where the danger is. Fix: remember on which side the line was seen last.)
+
+### Experiment: sensor distance and angle
+I slid the car sideways across the top straight of the oval (the line is 30 px wide) and noted where the readings change.
+
+| Setting | Reading when centred | Both `True` while the car is within | Result |
+|---|---|---|---|
+| distance 25, angles ±30 (default) | True, True | ±2 px of the centre | Reacts as soon as the car drifts; good |
+| distance 10, angles ±30 | True, True | ±10 px | **Too late** |
+| distance 60, angles ±30 | **False, False** | never | **Wrong**: says "off the line" when it is on it |
+| distance 25, angles ±10 | True, True | ±9 px | **Too late** |
+| distance 25, angles ±60 | **False, False** | never | **Wrong**, like distance 60 |
+
+- **Too close (distance 10 or angles ±10):** the two sensors are almost in the same place, so both stay `True` until the car is already near the edge of the line. The autopilot will only react when it is about to leave the line, so it will bounce from one edge to the other instead of driving in the centre. Being so close to the nose also means it sees the curve late, and at higher speed it will not manage to turn in time.
+- **Too far (distance 60 or angles ±60):** the sensors end up further apart than the line is wide, so when the car is perfectly centred both sensors are on the light floor and read `False`. The car "thinks" it has left the road when it has not. Far-ahead sensors can also touch the line before the car reaches it, for example when the car comes back towards the line at an angle, so they make it turn too early and miss the line.
+- **The best setting is in the middle:** the two sensors must sit just inside the edges of the line, so that a small drift changes one reading straight away.
