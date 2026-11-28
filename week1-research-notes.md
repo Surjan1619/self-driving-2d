@@ -259,3 +259,26 @@ I slid the car sideways across the top straight of the oval (the line is 30 px w
 - **Too close (distance 10 or angles ±10):** the two sensors are almost in the same place, so both stay `True` until the car is already near the edge of the line. The autopilot will only react when it is about to leave the line, so it will bounce from one edge to the other instead of driving in the centre. Being so close to the nose also means it sees the curve late, and at higher speed it will not manage to turn in time.
 - **Too far (distance 60 or angles ±60):** the sensors end up further apart than the line is wide, so when the car is perfectly centred both sensors are on the light floor and read `False`. The car "thinks" it has left the road when it has not. Far-ahead sensors can also touch the line before the car reaches it, for example when the car comes back towards the line at an angle, so they make it turn too early and miss the line.
 - **The best setting is in the middle:** the two sensors must sit just inside the edges of the line, so that a small drift changes one reading straight away.
+
+---
+
+## Step 9 · Autopilot (bang-bang control)
+
+| Left | Right | Meaning | Steer |
+|---|---|---|---|
+| True | True | Centred on the line | 0.0 |
+| True | False | Line is drifting to the left | −1.0 |
+| False | True | Line is drifting to the right | +1.0 |
+| False | False | Lost the line | Keep doing what I did last |
+
+Where the loop is in the code: SENSE = `read_sensors()`, THINK = `brain()`, ACT = `car.move()` (the three lines in the main loop of `main.py`).
+
+### Speed limit (TURN_RATE = 4, 3 autonomous laps each)
+| Speed | 2 | 4 | 6 | 8 | 9 | 10 | 12 |
+|---|---|---|---|---|---|---|---|
+| Frames off line | 0 | 0 | 0 | 0 | 8 | 116 | 191 |
+
+The highest speed with zero frames off the line is **8**. The car's tightest turn has a radius of about speed ÷ TURN_RATE (in radians): at speed 8 that is 8 ÷ 0.07 ≈ 115 px, the same as the curves at the ends of the oval. At speed 9 it is ≈ 129 px, so even at full steer the car cannot turn sharply enough and drifts outwards.
+
+### Extra experiment: TURN_RATE = 10
+With TURN_RATE 10 the car can turn 2.5 times more sharply, so it stays on the line at much higher speeds: 3 laps at speed 20 with zero frames off the line (20 ÷ 0.175 ≈ 115 px). When I let it drive at speed 20 for 2 minutes it was still off the line for about 2000 frames (≈ 28 % of the time). The downside is that the car wobbles more, it is almost impossible to drive by hand, and a real car cannot turn its wheels that fast. So I kept TURN_RATE = 4.

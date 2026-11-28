@@ -29,7 +29,7 @@ python -m venv .venv
 - [x] Step 6: starter code runs
 - [x] Step 7: drive with the keyboard
 - [x] Step 8: sensors
-- [ ] Step 9: autopilot
+- [x] Step 9: autopilot
 - [ ] Step 10: measure and improve
 
 ## Files

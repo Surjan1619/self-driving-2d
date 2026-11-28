@@ -119,10 +119,51 @@ def read_sensors(car, track):
 
 
 # ---------------- THINK ----------------
+# The brain's memory. It lives OUTSIDE the function, so its value survives from one
+# frame to the next. (A normal variable inside brain() would be forgotten every frame.)
+last_steer = 0.0
+
+
 def brain(readings):
-    """Turn the sensor readings into a steering value from -1.0 to +1.0."""
-    # TODO Step 9
-    return 0.0
+    """Turn the sensor readings into a steering value from -1.0 to +1.0.
+
+    This is the THINK step. The rule: steer TOWARDS the sensor that sees the line.
+
+        left   right   meaning                       steer
+        True   True    centred on the line           0.0  (straight)
+        True   False   line is to the LEFT           -1.0 (full left)
+        False  True    line is to the RIGHT          +1.0 (full right)
+        False  False   lost the line                 keep doing what we did last
+
+    This is called "bang-bang" control: only full left, straight or full right.
+    """
+    # "global" tells Python: when I write last_steer = ... here, change the variable
+    # ABOVE the function, do not create a new one that disappears after this frame.
+    global last_steer
+
+    # readings is a list like [True, False]. readings[0] = first (left) sensor,
+    # readings[-1] = last (right) sensor. Using -1 keeps working even if we add a
+    # middle sensor later: the last one is always the rightmost.
+    left, right = readings[0], readings[-1]
+
+    if left and right:
+        # Both sensors are on the line: the car is centred. Go straight.
+        last_steer = 0.0
+    elif left and not right:
+        # Only the LEFT sensor sees the line: the line is slipping away to the left.
+        # Steer left (negative) to get back on top of it.
+        last_steer = -1.0
+    elif right and not left:
+        # Only the RIGHT sensor sees the line: steer right (positive).
+        last_steer = 1.0
+    else:
+        # Neither sensor sees the line: we lost it. We do not know where it is,
+        # so we keep the last decision. If we were turning left when we lost it,
+        # the line is probably still on the left, so turning left again brings us back.
+        # (We do NOT change last_steer here, that is the whole trick.)
+        pass
+
+    return last_steer
 
 
 # ---------------- Manual driving ----------------
