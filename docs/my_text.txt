@@ -1,0 +1,59 @@
+in 2016 tesla model S crushed into the truck the reason of the tragedy was the autopilot 
+who didnt notice the trucks trailer, and couldnt behave correacly
+the cars speed was ~117 km/h and the speed limit was 100 
+Tesla was riding in the highway while the truck wanted to make a left turn 
+in front of him by blocking his road but tesla driver was not 
+kept an eye on the road s he didnt notice the trucks trailer 
+and crushed into him
+the Teslas logs are saved into the cars computer and sometimes the data is
+sent to the Teslas company for analyses so this situation is not a exception
+the car saved logs and they show that car war working on the 
+ Traffic-Aware Cruise Control mode which is controling the spped of the car
+ and culd speed up till the max speed limit and slow down till the car was being stopped
+ if there are cars or something in front of the car so it  just manage
+ the speed of the car and then was turned on Autostee system which keeps the car
+ into his road by keeping eyes in the road lines and other cars
+ these 2 systems makes the 2 level of the SAE, which is not enough
+ to distract attention from the road, but Tesla driver does
+ becuse the system sytem awared the driver to keep hands on a steering wheel
+ and the longest time when the car drived without drivers hand was
+ 6 minutes.also the logs showed that secons before cars crush car didnt identified 
+ the truck and didnt responsed to him.
+ The on of the reasons of the tragedy is that Teslas autopilot didnt trained to identify
+ the truck crossing the road and doesnt even reacted to him.
+
+
+ in the 2 level of the SAE dhe drived is obliged to 
+ -track automaticans
+ -understand wat is going on in the road
+ -know the system restrictions
+ -be ready to take control of the car any time
+
+ a lot of cars understand that the driver keeps hand on the steering 
+ wheel by the pressure trackers in it but driving in first is 
+ keeping eyes on the road, now a lot of systems track the driver eye
+ to understand is the driver kepping eyes on the road or not 
+
+
+ so the NTSB-s decition is that the truck driver deeded to yield the right of way
+ he didnt and the tresla driver vas innatentive and doesnt react.
+
+ in september 2016 testla made frimware update to version 8 an 
+ the update affected the drivers interface and warning logic
+ the new update reduced the time that tesla driver could 
+ use autopiot without hands on the steering wheel, 
+ befor he starts to wearn ant turn alarm 
+ adn it provides that if driver got 3 wrnings the autopilot will deactivated 
+ and will be unavilabe for an hour or untill an restart 
+ but if car is driving 8 mph the there will be no alerts no warnings
+ 
+
+
+
+
+ main.py explain
+
+
+in the line #THINK using 2 functions where
+checks is autopilot turned on he shown one behavoiur
+and if it turned off car listens the keyboard signals 

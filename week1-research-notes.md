@@ -208,3 +208,24 @@ It checks whether a point is inside the window and whether the pixel of the trac
 
 **4. Why is the track drawn on its own surface `track`?**
 The sensors read colours from `track`, which only has the floor and the line. If they read from `screen`, they would also see the red car and the blue sensor dots drawn on top. For example, a sensor under the car would read red, and red is not dark, so it would wrongly say "not on the line".
+
+---
+
+## Step 7 · Experiments
+
+**1. Speed.** 3 laps by hand:
+
+| Speed | Frames off line | Frames for 3 laps (approx.) | Share of time off the line |
+|---|---|---|---|
+| 2 | 141 | ≈ 2640 | ≈ 5 % |
+| 4 | ≈ 800 | ≈ 1320 | ≈ 60 % |
+
+The oval is about 1760 pixels long, so 3 laps take about 2640 frames at speed 2 but only about 1320 frames at speed 4. Even though the faster laps are twice as short in time, the car was off the line almost 6 times more often. At speed 4 the car moves twice as far each frame, so I have less time to react, and in the curves I could not turn fast enough to stay on the line.
+
+**2. TURN_RATE.**
+- At 1.0 the car turns only 1 degree per frame, so it turns very slowly. Even with the arrow held down it can barely get round the ends of the oval and drifts outwards. At speed 2 its tightest circle has a radius of about 115 pixels, about the same as the curves at the ends of the oval, so there is no margin.
+- At 10.0 the car turns 10 degrees per frame. A short tap already jerks it to the side, so it is hard to drive straight; holding the key spins it almost on the spot.
+- 4.0 is a good middle: fast enough for the curves, but still controllable.
+
+**3. Why is −1 / 0 / +1 steering not smooth?**
+Sometimes the car needs to turn just a little and sometimes a lot, but the keyboard only gives "straight" or "full turn". The oval is a long gentle curve that needs a small steer such as +0.3. With the keyboard I have to keep pressing and releasing the key: released, the car drifts off the outside of the line; pressed, it turns too hard to the inside. So it zig-zags instead of following a smooth arc. If my `brain()` in Step 9 only returns −1, 0 or +1, the autopilot will wobble in the same way.

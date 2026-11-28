@@ -1,0 +1,6 @@
+# Notes for Claude (private)
+CLAUDE_CONTEXT.md
+
+# Python
+__pycache__/
+.venv/

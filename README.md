@@ -19,6 +19,7 @@ python -m venv .venv
 | Key | Action |
 |---|---|
 | Left / Right arrows | Steer |
+| Up / Down arrows | Speed +0.5 / −0.5 |
 | A | Autopilot on / off |
 | R | Reset the car to the start |
 | Esc | Quit |
@@ -26,7 +27,7 @@ python -m venv .venv
 ## Progress
 
 - [x] Step 6: starter code runs
-- [ ] Step 7: drive with the keyboard
+- [x] Step 7: drive with the keyboard
 - [ ] Step 8: sensors
 - [ ] Step 9: autopilot
 - [ ] Step 10: measure and improve
